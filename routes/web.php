@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,3 +20,18 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Admin-only routes
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', 'AdminController@index')->name('admin.dashboard');
+});
+
+// Teacher-only routes
+Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::get('/teacher/dashboard', 'TeacherController@index')->name('teacher.dashboard');
+});
+
+// Student-only routes
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student/dashboard', 'StudentController@index')->name('student.dashboard');
+});
